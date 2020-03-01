@@ -20,7 +20,8 @@ class SearchBook extends Component {
 
     handleSubmit = async (e) => {
         e.preventDefault()
-        const { query } = serializeForm(e.target, { hash: true })
+        const form = document.querySelector('#searchBookForm')
+        const { query } = serializeForm(form, { hash: true })
         this.searchBook(query)
     }
 
@@ -30,13 +31,14 @@ class SearchBook extends Component {
                 <div className="search-books-bar">
                     <Link className='close-search' to="/">close</Link>
                     <div className="search-books-input-wrapper">
-                        <form onSubmit={this.handleSubmit}>
+                        <form id="searchBookForm" onSubmit={this.handleSubmit}>
                             <input type="text" name="query"
                                 placeholder="Search by title or author" />
                         <button className='submit-search'
                             type='submit'
+                            form="searchBookForm"
                             onClick={this.handleSubmit}
-                        >GO</button>
+                        >Submit</button>
                         </form>
                     </div>
                 </div>
