@@ -1,6 +1,6 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
-import './App.css'
+import * as BooksAPI from './BooksAPI'
+import './App.scss'
 import './components/SearchBook'
 import './components/ListBooks'
 import { Route } from 'react-router-dom'
@@ -9,7 +9,21 @@ import SearchBook from './components/SearchBook'
 
 
 class BooksApp extends React.Component {
-  state = {  }
+  state = { 
+      searched: [],
+      reading: [],
+      wantToRead: [],
+      read: []
+   }
+
+   searchBook = (query) => {
+    BooksAPI.search(query)
+      .then((result) => {
+        this.setState((prevState) => ({
+          searched: result
+        }))
+      })
+   }
 
   render() {
     return (
@@ -18,7 +32,15 @@ class BooksApp extends React.Component {
           // expected to pass a list of books here
           <ListBooks />
         )}/>
-        <Route path='/search' component={SearchBook}/>
+        <Route path='/search' render={() => (
+          <SearchBook 
+            onSearchBook={(query) => {
+              this.searchBook(query)
+            }}
+            books = {this.state.searched}
+          />
+        )}
+        />
       </div>
     )
   }
