@@ -30,7 +30,10 @@ class BooksApp extends React.Component {
       BooksAPI.getAll()
         .then((allBooks) => {
           this.setState(() => ({
-            allBooks
+            allBooks,
+            reading: allBooks.filter((book) => book.shelf === 'currentlyReading'),
+            wantToRead: allBooks.filter((book) => book.shelf === 'wantToRead'),
+            read: allBooks.filter((book) => book.shelf === 'read')
           }))
         })
    }
@@ -39,8 +42,8 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         <Route exact path="/" render={() => (
-          // expected to pass a list of books here
-          <ListBooks books={this.state.allBooks}/>
+          // Pass the state object to the component
+          <ListBooks {...this.state}/>
         )}/>
         <Route path='/search' render={() => (
           <SearchBook 
