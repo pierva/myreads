@@ -11,7 +11,7 @@ class BookShelf extends Component {
       <div className="bookshelf">
         <h2 className="bookshelf-title">{shelfTitle}</h2>
         <div className="bookshelf-books">
-          {books.error ? 
+          {!books || books.error ? 
             <p>No books found</p> 
           :
           <ol className="books-grid">
