@@ -13,7 +13,8 @@ class BooksApp extends React.Component {
       searched: [],
       reading: [],
       wantToRead: [],
-      read: []
+      read: [],
+      allBooks: []
    }
 
    searchBook = (query) => {
@@ -25,12 +26,21 @@ class BooksApp extends React.Component {
       })
    }
 
+   componentDidMount() {
+      BooksAPI.getAll()
+        .then((allBooks) => {
+          this.setState(() => ({
+            allBooks
+          }))
+        })
+   }
+
   render() {
     return (
       <div className="app">
         <Route exact path="/" render={() => (
           // expected to pass a list of books here
-          <ListBooks />
+          <ListBooks books={this.state.allBooks}/>
         )}/>
         <Route path='/search' render={() => (
           <SearchBook 

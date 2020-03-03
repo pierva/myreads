@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import BookShelf from './BookShelf'
 
 class ListBooks extends Component {
-    state = {}
+    state = {
+    }
 
     render() {
         return (
@@ -15,17 +16,19 @@ class ListBooks extends Component {
               <div>
                <BookShelf
                 // Need to pass array of books coming from API 
-                  books = {[]}
+                  books = {this.props.books.filter((book) => book.shelf === 'currentlyReading')}
                   shelfTitle = 'Currently Reading'
                /> 
                <BookShelf
                 // Need to pass array of books coming from API 
-                  books = {[]}
+                books = {this.props.books.filter((book) => book.shelf === 'wantToRead')}
+
                   shelfTitle = 'Want to Read'
                /> 
                <BookShelf
                 // Need to pass array of books coming from API 
-                  books = {[]}
+                books = {this.props.books.filter((book) => book.shelf === 'read')}
+
                   shelfTitle = 'Read'
                /> 
 
