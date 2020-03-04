@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import BookShelf from './BookShelf'
 
-class ListBooks extends Component {
 
-  render() {
-    
+function ListBooks (props) {
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -14,19 +12,19 @@ class ListBooks extends Component {
         <div className="list-books-content">
           <div>
             <BookShelf
-              books={this.props.reading}
+              books={props.currentlyReading}
               shelfTitle='Currently Reading'
-              handleChange={console.log('changin')}
+              handleChange={props.handleChange}
             />
             <BookShelf
-              books={this.props.wantToRead}
+              books={props.wantToRead}
               shelfTitle='Want to Read'
-              handleChange={console.log('changin')}
+              handleChange={props.handleChange}
 
             />
             <BookShelf
-              books={this.props.read}
-              handleChange={console.log('changin')}
+              books={props.read}
+              handleChange={props.handleChange}
               shelfTitle='Read'
             />
 
@@ -40,6 +38,5 @@ class ListBooks extends Component {
       </div>
     )
   }
-}
 
 export default ListBooks
