@@ -54,9 +54,9 @@ class SearchBook extends Component {
                     </ol>
                 </div>
                 <BookShelf
-                    // Need to pass array of books coming from API 
                     books={this.state.books}
                     shelfTitle=''
+                    handleChange={this.props.handleChange}
                 />
             </div>
         )
