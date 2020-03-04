@@ -22,14 +22,19 @@ class BooksApp extends React.Component {
       none: []
    }
 
-   searchBook = (query) => {
-    BooksAPI.search(query)
-      .then((result) => {
-        this.setState((prevState) => ({
-          searched: result
+   searchBook = async (query) => {
+        if (query && query.trim() !== "") {
+            return BooksAPI.search(query)
+                .then((result) => {
+                    this.setState((prevState) => ({
+                        searched: result
+                    }))
+                })
+        }
+        return this.setState(() => ({
+            searched: []
         }))
-      })
-   }
+    }
 
    filterBooks(allBooks) {
     return {
