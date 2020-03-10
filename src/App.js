@@ -14,35 +14,25 @@ class BooksApp extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
-  state = { 
-      searched: [],
-      wantToRead: [],
-      read: [],
-      allBooks: [],
-      none: []
-   }
+  state = {
+    searched: [],
+    wantToRead: [],
+    read: [],
+    allBooks: [],
+    none: []
+  }
 
-   searchBook = async (query) => {
-        if (query && query.trim() !== "") {
-            return BooksAPI.search(query)
-                .then((result) => {
-                    this.setState((prevState) => ({
-                        searched: result
-                    }))
-                })
-        }
-        return this.setState(() => ({
-            searched: []
-        }))
-    }
-
-   filterBooks(allBooks) {
+  /**
+   * 
+   * @param {array} allBooks 
+   */
+  filterBooks(allBooks) {
     return {
       currentlyReading: allBooks.filter((book) => book.shelf === 'currentlyReading'),
       wantToRead: allBooks.filter((book) => book.shelf === 'wantToRead'),
       read: allBooks.filter((book) => book.shelf === 'read')
     }
-  } 
+  }
 
   componentDidMount() {
     BooksAPI.getAll()
@@ -62,7 +52,7 @@ class BooksApp extends React.Component {
     // Update shelf property here otherwise the selected option will
     // be the previous option
     book.shelf = shelf
-    if(book) {
+    if (book) {
       BooksAPI.update(bookId, shelf)
         .then((res) => {
           if (!res.error) {
@@ -81,17 +71,13 @@ class BooksApp extends React.Component {
         <Route exact path="/" render={() => (
           // Pass the state object to the component
           <ListBooks {...this.state}
-            handleChange = {this.handleChange}
+            handleChange={this.handleChange}
           />
-          // <ListBooks />
-        )}/>
+        )} />
         <Route path='/search' render={() => (
-          <SearchBook 
-            onSearchBook={(query) => {
-              this.searchBook(query)
-            }}
-            books = {this.state.searched}
-            handleChange = {this.handleChange}
+          <SearchBook
+            books={this.state.searched}
+            handleChange={this.handleChange}
           />
         )}
         />
