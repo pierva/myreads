@@ -1,46 +1,67 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import serializeForm from 'form-serialize'
 import BookShelf from './BookShelf'
+import { throttle } from 'lodash'
+import * as BooksAPI from '../BooksAPI'
 
-
-
-function SearchBook(props) {
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const form = document.querySelector('#searchBookForm')
-        const { query } = serializeForm(form, { hash: true })
-        props.onSearchBook(query)
+class SearchBook extends Component {
+    state = {
+        searched: []
     }
-    return (
-        <div>
-            <div className="search-books-bar">
-                <Link className='close-search' to="/">close</Link>
-                <div className="search-books-input-wrapper">
-                    <form id="searchBookForm" onSubmit={handleSubmit}>
+    /**
+     * @param {string} query
+     * @returns {promise || undefined} If no query parameter is provided
+     *                                 the function assing an empty array
+     *                                 to the state "searched" key
+     */
+    searchBook = async (query) => {
+        if (query && query.trim() !== "") {
+          return BooksAPI.search(query)
+            .then((result) => {
+              this.setState((prevState) => ({
+                searched: result
+              }))
+            })
+        }
+        return this.setState(() => ({
+          searched: []
+        }))
+      }
+
+    handleSubmit = (e) => {
+        /**
+         * BUG: event is not accessible when the function is called
+         *      by the throttle method
+         */
+        const query = document.querySelector('[name="query"]').value
+        this.searchBook(query)
+    }  
+    render() {
+        return (
+            <div>
+                <div className="search-books-bar">
+                    <Link className='close-search' to="/">close</Link>
+                    <div className="search-books-input-wrapper">
                         <input type="text" name="query" required
-                            placeholder="Search by title or author" />
-                        <button className='submit-search'
-                            type='submit'
-                            form="searchBookForm"
-                            onClick={handleSubmit}
-                        >Submit</button>
-                    </form>
+                            onChange={throttle(this.handleSubmit, 300)}
+                            placeholder="Search by title or author"
+                            />
+                    </div>
                 </div>
-            </div>
 
-            <div className="search-books-results">
-                <ol className="books-grid">
+                <div className="search-books-results">
+                    <ol className="books-grid">
 
-                </ol>
+                    </ol>
+                </div>
+                <BookShelf
+                    books={this.state.searched}
+                    shelfTitle=''
+                    handleChange={this.props.handleChange}
+                />
             </div>
-            <BookShelf
-                books={props.books}
-                shelfTitle=''
-                handleChange={props.handleChange}
-            />
-        </div>
-    )
+        )
+    }
 }
 
 export default SearchBook
