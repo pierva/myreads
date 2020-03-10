@@ -6,12 +6,12 @@ class BookShelf extends Component {
   render() {
     const { books } = this.props
     const { shelfTitle } = this.props
-  
+    
     return (
       <div className="bookshelf">
         <h2 className="bookshelf-title">{shelfTitle}</h2>
         <div className="bookshelf-books">
-          {!books || books.error ? 
+          {!books || books.error || books.length===0 ? 
             <p>No books found</p> 
           :
           <ol className="books-grid">
@@ -22,7 +22,7 @@ class BookShelf extends Component {
                     <div className="book-cover"
                       style={{
                         width: 128, height: 193,
-                        backgroundImage: `url(${book.imageLinks.smallThumbnail})`
+                        backgroundImage: `url(${book.imageLinks ? book.imageLinks.smallThumbnail : ""})`
                       }}></div>
                     <div className="book-shelf-changer">
                       <select onChange={this.props.handleChange} data-bookid={book.id}
