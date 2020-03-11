@@ -14,19 +14,27 @@ class SearchBook extends Component {
      *                                 the function assing an empty array
      *                                 to the state "searched" key
      */
-    searchBook = async (query) => {
+    
+    searchBook = async (query) => {        
         if (query && query.trim() !== "") {
-          return BooksAPI.search(query)
-            .then((result) => {
-              this.setState((prevState) => ({
-                searched: result
-              }))
-            })
+            return BooksAPI.search(query)
+                .then((result) => {
+                    const booksOnShelves = this.props.books
+                    const filtered = result.map((book) => {
+                        const bookOnShelf = booksOnShelves.find(
+                            (elem) => elem.id === book.id )
+                        if (bookOnShelf) return bookOnShelf
+                        return book
+                    })                   
+                    this.setState((prevState) => ({
+                        searched: filtered
+                    }))
+                })
         }
         return this.setState(() => ({
-          searched: []
+            searched: []
         }))
-      }
+    }
 
     handleSubmit = (e) => {
         /**
@@ -35,7 +43,7 @@ class SearchBook extends Component {
          */
         const query = document.querySelector('[name="query"]').value
         this.searchBook(query)
-    }  
+    } 
     render() {
         return (
             <div>
@@ -45,7 +53,7 @@ class SearchBook extends Component {
                         <input type="text" name="query" required
                             onChange={throttle(this.handleSubmit, 300)}
                             placeholder="Search by title or author"
-                            />
+                        />
                     </div>
                 </div>
 

@@ -34,8 +34,8 @@ class BooksApp extends React.Component {
     }
   }
 
-  componentDidMount() {
-    BooksAPI.getAll()
+  async componentDidMount() {
+    await BooksAPI.getAll()
       .then((allBooks) => {
         this.setState(() => ({
           allBooks,
@@ -52,13 +52,20 @@ class BooksApp extends React.Component {
     // Update shelf property here otherwise the selected option will
     // be the previous option
     book.shelf = shelf
+     
     if (book) {
-      BooksAPI.update(bookId, shelf)
+      const allBooks = this.state.allBooks.map((elem) => {
+        if(elem.id === book.id) return book
+        return elem
+      })
+
+      await BooksAPI.update(bookId, shelf)
         .then((res) => {
           if (!res.error) {
             this.setState((prevState) => ({
               [prevShelf]: prevState[prevShelf].filter((book) => book.id !== bookId),
-              [shelf]: prevState[shelf].concat([book])
+              [shelf]: prevState[shelf].concat([book]),
+              allBooks
             }))
           }
         })
@@ -76,7 +83,7 @@ class BooksApp extends React.Component {
         )} />
         <Route path='/search' render={() => (
           <SearchBook
-            books={this.state.searched}
+            books={this.state.allBooks}
             handleChange={this.handleChange}
           />
         )}

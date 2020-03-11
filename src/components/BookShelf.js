@@ -6,7 +6,6 @@ class BookShelf extends Component {
   render() {
     const { books } = this.props
     const { shelfTitle } = this.props
-    
     return (
       <div className="bookshelf">
         <h2 className="bookshelf-title">{shelfTitle}</h2>
@@ -27,7 +26,7 @@ class BookShelf extends Component {
                     <div className="book-shelf-changer">
                       <select onChange={this.props.handleChange} data-bookid={book.id}
                         data-shelf={book.shelf || 'none'}
-                        value={shelfTitle === '' ? 'none' : book.shelf}>
+                        value={book.shelf ? book.shelf : 'none'}>
                         <option value="move" disabled>Move to...</option>
                         <option value="currentlyReading">Currently Reading</option>
                         <option value="wantToRead">Want to Read</option>
