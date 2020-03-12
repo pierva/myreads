@@ -59,6 +59,16 @@ class BooksApp extends React.Component {
         return elem
       })
 
+      // Update the searched books array
+      const idx = this.state.searched.findIndex(x => x.id === book.id)
+      if(idx !== -1) {
+        const books = this.state.searched
+        books[idx].shelf = shelf
+        this.setState((prevState) => ({
+          searched: books
+        }))
+      }
+
       await BooksAPI.update(bookId, shelf)
         .then((res) => {
           if (!res.error) {
@@ -72,6 +82,34 @@ class BooksApp extends React.Component {
     }
   }
 
+  /**
+     * @param {string} query
+     * @returns {promise || undefined} If no query parameter is provided
+     *                                 the function assing an empty array
+     *                                 to the state "searched" key
+     */
+    
+    searchBook = async (query) => {          
+      if (query && query.trim() !== "") {
+          return BooksAPI.search(query)
+              .then((result) => {
+                  const booksOnShelves = this.state.allBooks
+                  const filtered = result.map((book) => {
+                      const bookOnShelf = booksOnShelves.find(
+                          (elem) => elem.id === book.id )
+                      if (bookOnShelf) return bookOnShelf
+                      return book
+                  })                   
+                  this.setState((prevState) => ({
+                      searched: filtered
+                  }))
+              })
+      }
+      return this.setState(() => ({
+          searched: []
+      }))
+  }
+
   render() {
     return (
       <div className="app">
@@ -83,8 +121,9 @@ class BooksApp extends React.Component {
         )} />
         <Route path='/search' render={() => (
           <SearchBook
-            books={this.state.allBooks}
+            books={this.state.searched}
             handleChange={this.handleChange}
+            searchBook={this.searchBook}
           />
         )}
         />
