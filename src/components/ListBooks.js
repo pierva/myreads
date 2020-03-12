@@ -32,7 +32,7 @@ function ListBooks (props) {
         </div>
         <div>
           <Link className="open-search" to="/search">
-            <button>Search</button>
+            <button onClick={props.handleClick}>Search</button>
           </Link>
         </div>
       </div>

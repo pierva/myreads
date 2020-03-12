@@ -82,6 +82,12 @@ class BooksApp extends React.Component {
     }
   }
 
+  clearSearch = () => {
+    this.setState(() => ({
+      searched: []
+    }))
+  }
+
   /**
      * @param {string} query
      * @returns {promise || undefined} If no query parameter is provided
@@ -117,6 +123,7 @@ class BooksApp extends React.Component {
           // Pass the state object to the component
           <ListBooks {...this.state}
             handleChange={this.handleChange}
+            handleClick = {this.clearSearch}
           />
         )} />
         <Route path='/search' render={() => (
