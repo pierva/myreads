@@ -6,11 +6,13 @@ class BookShelf extends Component {
   render() {
     const { books } = this.props
     const { shelfTitle } = this.props
+    const { emptySearch } = this.props
+
     return (
       <div className="bookshelf">
         <h2 className="bookshelf-title">{shelfTitle}</h2>
         <div className="bookshelf-books">
-          {!books || books.error || books.length===0 ? 
+          {emptySearch ? <p></p> : !books || books.error || books.length===0 ? 
             <p>No books found</p> 
           :
           <ol className="books-grid">

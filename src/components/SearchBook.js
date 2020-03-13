@@ -1,25 +1,34 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import BookShelf from './BookShelf'
 import { throttle } from 'lodash'
 
-function SearchBook (props) {
+class SearchBook extends Component {
 
-    const handleSubmit = (e) => {
+    state = {
+        emptySearch: true
+    }
+
+    handleSubmit = (e) => {
         /**
          * BUG: event is not accessible when the function is called
          *      by the throttle method
          */
         const query = document.querySelector('[name="query"]').value
-        props.searchBook(query)
+        this.props.searchBook(query)
+        const emptySearch = query.trim() !== '' ? false : true
+            this.setState(() => ({
+                emptySearch
+            }))
     } 
+    render(){
         return (
             <div>
                 <div className="search-books-bar">
                     <Link className='close-search' to="/">close</Link>
                     <div className="search-books-input-wrapper">
                         <input type="text" name="query" required
-                            onChange={throttle(handleSubmit, 300)}
+                            onChange={throttle(this.handleSubmit, 300)}
                             placeholder="Search by title or author"
                         />
                     </div>
@@ -31,12 +40,14 @@ function SearchBook (props) {
                     </ol>
                 </div>
                 <BookShelf
-                    books={props.books}
+                    books={this.props.books}
                     shelfTitle=''
-                    handleChange={props.handleChange}
+                    handleChange={this.props.handleChange}
+                    emptySearch = {this.state.emptySearch}
                 />
             </div>
         )
+    }
 }
 
 export default SearchBook
