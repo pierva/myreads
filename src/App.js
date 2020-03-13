@@ -100,7 +100,7 @@ class BooksApp extends React.Component {
           return BooksAPI.search(query)
               .then((result) => {
                   const booksOnShelves = this.state.allBooks
-                  const filtered = result.map((book) => {
+                  const filtered = result.error ? [] : result.map((book) => {
                       const bookOnShelf = booksOnShelves.find(
                           (elem) => elem.id === book.id )
                       if (bookOnShelf) return bookOnShelf
