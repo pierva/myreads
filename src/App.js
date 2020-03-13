@@ -16,30 +16,14 @@ class BooksApp extends React.Component {
 
   state = {
     searched: [],
-    wantToRead: [],
-    read: [],
-    allBooks: [],
-    none: []
-  }
-
-  /**
-   * 
-   * @param {array} allBooks 
-   */
-  filterBooks(allBooks) {
-    return {
-      currentlyReading: allBooks.filter((book) => book.shelf === 'currentlyReading'),
-      wantToRead: allBooks.filter((book) => book.shelf === 'wantToRead'),
-      read: allBooks.filter((book) => book.shelf === 'read')
-    }
+    allBooks: []
   }
 
   async componentDidMount() {
     await BooksAPI.getAll()
       .then((allBooks) => {
         this.setState(() => ({
-          allBooks,
-          ...this.filterBooks(allBooks)
+          allBooks
         }))
       })
   }
@@ -47,7 +31,6 @@ class BooksApp extends React.Component {
   async handleChange(event) {
     const shelf = event.target.value
     const bookId = event.target.dataset.bookid
-    const prevShelf = event.target.dataset.shelf
     const book = await BooksAPI.get(bookId)
     // Update shelf property here otherwise the selected option will
     // be the previous option
@@ -71,10 +54,8 @@ class BooksApp extends React.Component {
 
       await BooksAPI.update(bookId, shelf)
         .then((res) => {
-          if (!res.error) {
+          if (!res.error) {          
             this.setState((prevState) => ({
-              [prevShelf]: prevState[prevShelf].filter((book) => book.id !== bookId),
-              [shelf]: prevState[shelf].concat([book]),
               allBooks
             }))
           }

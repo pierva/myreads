@@ -4,6 +4,20 @@ import BookShelf from './BookShelf'
 
 
 function ListBooks (props) {
+    const shelves = [
+      {
+        name: 'Currently Reading',
+        value: 'currentlyReading'
+      },
+      {
+        name: 'Want to Read',
+        value: 'wantToRead'
+      },
+      {
+        name: 'Read',
+        value: 'read'
+      }
+    ]
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -11,23 +25,16 @@ function ListBooks (props) {
         </div>
         <div className="list-books-content">
           <div>
-            <BookShelf
-              books={props.currentlyReading}
-              shelfTitle='Currently Reading'
-              handleChange={props.handleChange}
-            />
-            <BookShelf
-              books={props.wantToRead}
-              shelfTitle='Want to Read'
-              handleChange={props.handleChange}
-
-            />
-            <BookShelf
-              books={props.read}
-              handleChange={props.handleChange}
-              shelfTitle='Read'
-            />
-
+            {
+            shelves.map((shelf) => (
+                <BookShelf 
+                  key={shelf.value}
+                  books={props.allBooks.filter((book) => book.shelf === shelf.value)}
+                  shelfTitle= {shelf.name}
+                  handleChange={props.handleChange}
+                />
+            ))
+            }  
           </div>
         </div>
         <div>
